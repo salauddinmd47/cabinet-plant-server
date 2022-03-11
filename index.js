@@ -16,6 +16,8 @@ async function run() {
       const database = client.db("CabinetPlant");
       const plantsCollection = database.collection("plants");
      const orderCollection = database.collection('orders')
+     const testimonialsCollection = database.collection('testimonials');
+     const userCollections = database.collection('users')
       //   get operation 
     app.get('/products', async(req, res)=>{
         const category = req.query.category ;
@@ -57,6 +59,12 @@ async function run() {
      
     })
 
+    app.get('/testimonials', async(req, res)=>{
+      const testimonials = testimonialsCollection.find({})
+      const result = await testimonials.toArray()
+      res.json(result)
+    })
+
     // post operation 
 
     app.post('/purchase', async(req,res)=>{
@@ -70,6 +78,17 @@ async function run() {
       res.json(result)
       console.log(result)
     })
+    app.post('/testimonials', async(req, res)=>{
+      const newReview = req.body; 
+      const result = await testimonialsCollection.insertOne(newReview)
+      res.json(result)
+      console.log(result)
+    })
+     app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userCollections.insertOne(user);
+      res.json(result);
+    });
 
     // delete operation 
 
@@ -89,7 +108,21 @@ async function run() {
       
     })
      
-    
+    // update operation 
+    app.put("/users", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: { user },
+      };
+      const result = await userCollections.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.json(result);
+    });
        
      
     
