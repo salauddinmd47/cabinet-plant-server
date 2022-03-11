@@ -62,26 +62,31 @@ async function run() {
     app.post('/purchase', async(req,res)=>{
       const  orderInfo = req.body;
        const result = await orderCollection.insertOne(orderInfo)
-       res.send(result)
-       console.log(result)
-
+       res.send(result) 
+    })
+    app.post('/products', async(req, res)=>{
+      const newProduct = req.body; 
+      const result = await plantsCollection.insertOne(newProduct)
+      res.json(result)
+      console.log(result)
     })
 
     // delete operation 
 
     app.delete('/orders/:id', async(req, res)=>{
       const id = req.params.id;
-      const query = {_id:ObjectId(id)}
-      const result= await orderCollection.deleteOne({})
+      const cursor = {_id:ObjectId(id)}
+      const result= await orderCollection.deleteOne(cursor)
       res.json(result)
-      console.log(result)
+    
     })
     app.delete('/products/:id', async(req, res)=>{
       const id = req.params.id;
-      const query = {_id:ObjectId(id)}
-      const result= await orderCollection.deleteOne({})
+      const cursor = {_id:ObjectId(id)}
+      const result= await plantsCollection.deleteOne(cursor)
       res.json(result)
-      console.log(result)
+       
+      
     })
      
     
