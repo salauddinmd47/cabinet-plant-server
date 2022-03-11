@@ -64,7 +64,16 @@ async function run() {
       const result = await testimonials.toArray()
       res.json(result)
     })
-
+    app.get('/users/:email', async(req, res)=>{
+      const  email = req.params.email;
+      const query = {email:email}
+      const user = await userCollections.findOne(query)
+      let isAdmin = false;
+      if(user?.role ==='admin'){
+        isAdmin= true
+      }
+      res.json({admin:isAdmin})
+    })
     // post operation 
 
     app.post('/purchase', async(req,res)=>{
@@ -123,6 +132,18 @@ async function run() {
       );
       res.json(result);
     });
+
+    app.put('/users/admin',async(req, res)=>{
+      const email = req.body.email;
+      console.log(email)
+      const filter = {email:email};
+      const updateDoc = {
+        $set:{role:'admin'}
+      }
+      const result = await userCollections.updateOne(filter, updateDoc)
+      res.json(result)
+      console.log(result)
+    })
        
      
     
